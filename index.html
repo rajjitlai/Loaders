@@ -1,23 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-          <meta charset="UTF-8">
-          <meta http-equiv="X-UA-Compatible" content="IE=edge">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Animated Text using SVG</title>
 
-          <link rel="stylesheet" href="style.css">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Text Loader</title>
+    <style>
+        /* CSS reset and vars */
+        :root {
+            --bg-color: #0d0d10;
+            --accent-color: #00fdea;
+            --text-color: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Main Viewport */
+        .viewport {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: #111;
+            /* Loader background */
+            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Controls Bar */
+        .controls {
+            height: 80px;
+            background: rgba(20, 20, 30, 0.95);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 12px 28px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: var(--accent-color);
+            color: #000;
+            box-shadow: 0 0 25px rgba(0, 253, 234, 0.5);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Loader Styles */
+        svg {
+            font-size: 150px;
+            width: 90%;
+            max-width: 900px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+        }
+
+        .copy {
+            fill: none;
+            stroke-width: 3px;
+            stroke-dasharray: 8% 30%;
+            stroke-dashoffset: 0%;
+            animation: textanimation 6s linear infinite;
+        }
+
+        @keyframes textanimation {
+            100% {
+                stroke-dashoffset: -35%;
+            }
+        }
+
+        .copy1 {
+            stroke: #FF00CC;
+            animation-delay: -1s;
+        }
+
+        .copy2 {
+            stroke: #33FF33;
+            animation-delay: -2s;
+        }
+
+        .copy3 {
+            stroke: #00FFFF;
+            animation-delay: -3s;
+        }
+
+        .copy4 {
+            stroke: #FF3300;
+            animation-delay: -4s;
+        }
+
+        .copy5 {
+            stroke: #FFFF00;
+            animation-delay: -5s;
+        }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            background-color: #0d0d10;
+            color: var(--accent-color);
+            text-align: center;
+            border-radius: 30px;
+            padding: 12px 30px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 100px;
+            transform: translateX(-50%);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 253, 234, 0.2);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 80px;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 100px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 100px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 80px;
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
+
 <body>
-          <div class="container">
-                    <svg viewBox="0 0 1000 400">
-                              <text fill="none" id="myText" x="50%" y="50%" text-anchor="middle">IC.NET</text>
-                              <use xlink:href="#myText" class="copy copy1"></use>
-                              <use xlink:href="#myText" class="copy copy2"></use>
-                              <use xlink:href="#myText" class="copy copy3"></use>
-                              <use xlink:href="#myText" class="copy copy4"></use>
-                              <use xlink:href="#myText" class="copy copy5"></use>
-                    </svg>
-          </div>
+
+    <div class="viewport">
+        <svg viewBox="0 0 1000 400">
+            <text fill="none" id="myText" x="50%" y="50%" text-anchor="middle">Load</text>
+            <use xlink:href="#myText" class="copy copy1"></use>
+            <use xlink:href="#myText" class="copy copy2"></use>
+            <use xlink:href="#myText" class="copy copy3"></use>
+            <use xlink:href="#myText" class="copy copy4"></use>
+            <use xlink:href="#myText" class="copy copy5"></use>
+        </svg>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="copyCode('html')">Copy HTML</button>
+        <button class="btn" onclick="copyCode('css')">Copy CSS</button>
+    </div>
+
+    <div id="toast">Code copied!</div>
+
+    <script>
+        // Using string concatenation to avoid browser parsing issues with closing tags
+        const codeHTML = '<!DOCTYPE html>\n' +
+            '<html lang="en">\n' +
+            '<head>\n' +
+            '<meta charset="UTF-8">\n' +
+            '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+            '<title>SVG Text Loader</' + 'title>\n' +
+            '<link rel="stylesheet" href="style.css">\n' +
+            '<style>\n' +
+            '/* Optional: Center the loader */\n' +
+            'body { background: #111; height: 100vh; display: flex; justify-content: center; align-items: center; margin: 0; }\n' +
+            'svg { width: 90%; max-width: 800px; }\n' +
+            '</' + 'style>\n' +
+            '</' + 'head>\n' +
+            '<body>\n' +
+            '    <svg viewBox="0 0 1000 400">\n' +
+            '        <text fill="none" id="myText" x="50%" y="50%" text-anchor="middle">Load</' + 'text>\n' +
+            '        <use xlink:href="#myText" class="copy copy1"></' + 'use>\n' +
+            '        <use xlink:href="#myText" class="copy copy2"></' + 'use>\n' +
+            '        <use xlink:href="#myText" class="copy copy3"></' + 'use>\n' +
+            '        <use xlink:href="#myText" class="copy copy4"></' + 'use>\n' +
+            '        <use xlink:href="#myText" class="copy copy5"></' + 'use>\n' +
+            '    </' + 'svg>\n' +
+            '</' + 'body>\n' +
+            '</' + 'html>';
+
+        const codeCSS = `
+.copy {
+    fill: none;
+    stroke-width: 3px;
+    stroke-dasharray: 8% 30%;
+    stroke-dashoffset: 0%;
+    animation: textanimation 6s linear infinite;
+}
+
+@keyframes textanimation {
+    100% { stroke-dashoffset: -35%; }
+}
+
+.copy1 { stroke: #FF00CC; animation-delay: -1s; }
+.copy2 { stroke: #33FF33; animation-delay: -2s; }
+.copy3 { stroke: #00FFFF; animation-delay: -3s; }
+.copy4 { stroke: #FF3300; animation-delay: -4s; }
+.copy5 { stroke: #FFFF00; animation-delay: -5s; }`;
+
+        function copyCode(type) {
+            const content = type === 'html' ? codeHTML : codeCSS;
+
+            navigator.clipboard.writeText(content).then(() => {
+                showToast();
+            }).catch(err => {
+                const ta = document.createElement("textarea");
+                ta.value = content;
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    showToast();
+                } catch (e) { }
+                document.body.removeChild(ta);
+            });
+        }
+
+        function showToast() {
+            const t = document.getElementById("toast");
+            t.className = "show";
+            setTimeout(() => t.className = t.className.replace("show", ""), 3000);
+        }
+    </script>
 </body>
+
 </html>
