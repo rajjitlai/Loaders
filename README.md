@@ -1,20 +1,19 @@
-# Project Loaders & Landing Page
+# Neon SVG Text Loader
 
-This repository contains a collection of web design concepts, specifically an animated SVG text loader and a decentralized network landing page.
+A vibrant, lightweight, and animated SVG text loader.
 
-## Contents
-
-### 1. SVG Text Animation (`index.html`)
-A creative text animation using SVG strokes. The text "IC.NET" fills sequentially using `stroke-dasharray` and `stroke-dashoffset` animations.
-- **Key Files**: `index.html`, `style.css`
-
-### 2. Decentralized Network Landing Page (`1index.html`)
-A futuristic, dark-themed landing page for a "Decentralized Network".
-- **Features**: Navigation menu, Hero section with "Play" button, Social media links.
-- **Key Files**: `1index.html`, `css/style.css`
+## Features
+-   **Vibrant Neon Colors**: Uses a cycle of Magenta, Neon Green, Cyan, Bright Red, and Yellow.
+-   **Smooth Animation**: Elegant stroke-dashoffset animation for a "writing" effect.
+-   **Single File**: All code (HTML, CSS, JS) is contained in `index.html` for easy portability.
+-   **Copy & Paste Ready**: The interface provides buttons to instantly copy the necessary HTML and CSS for use in your own projects.
 
 ## Usage
+Simply open `index.html` in your web browser.
 
-To view the components, simply open the HTML files in a browser.
+1.  View the "Load" animation in the main viewport.
+2.  Click **Copy HTML** to get the structure.
+3.  Click **Copy CSS** to get the styles.
 
-A `gallery.html` file (if generated) provides a side-by-side view of these components with options to copy the source code.
+## Customization
+To change the text, simply edit the content inside the `<text>` tag in the SVG within `index.html`. To change colors, modify the `.copy1` through `.copy5` classes in the CSS.
